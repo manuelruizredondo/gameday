@@ -110,7 +110,6 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://images.unsplash.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Manrope:wght@300;400;500;600;700&display=swap">
 <script src="image-slot.js"></script>
 <style>
@@ -291,12 +290,52 @@
   .hero-photo{
     position: relative;
     height: clamp(360px, 58vh, 720px);
+    background: #0E0E0E;
+    cursor: pointer;
     background: var(--paper-2);
     overflow: hidden;
   }
   .hero-photo image-slot{
     position: absolute; inset: 0;
     width: 100%; height: 100%;
+  }
+  .hero-photo .yt-poster{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: opacity .25s ease;
+  }
+  .hero-photo .yt-play{
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.35));
+    transition: background .25s ease;
+  }
+  .hero-photo:hover .yt-play{ background: linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.50)) }
+  .hero-photo .yt-play::before{
+    content:"";
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 18px 44px rgba(233,75,28,0.50);
+    transition: transform .25s ease;
+  }
+  .hero-photo:hover .yt-play::before{ transform: scale(1.08) }
+  .hero-photo .yt-play::after{
+    content:"";
+    position: absolute;
+    width: 0; height: 0;
+    border-left: 26px solid #fff;
+    border-top: 17px solid transparent;
+    border-bottom: 17px solid transparent;
+    margin-left: 10px;
+  }
+  .hero-photo iframe{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; border: 0; display: block;
+  }
+  .hero-photo.playing .yt-poster, .hero-photo.playing .yt-play, .hero-photo.playing .tag{
+    opacity: 0; pointer-events: none;
   }
   .hero-photo .tag{
     position: absolute;
@@ -565,7 +604,7 @@
   /* ---------- clients ---------- */
   .clients-row{
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 0;
     border-top: 1px solid var(--ink);
     border-bottom: 1px solid var(--ink);
@@ -600,7 +639,104 @@
   }
   .client:hover{ opacity: 1 }
   .client:hover img{ opacity: 1; filter: grayscale(0); transform: scale(1.04); }
-  .client:nth-child(6n){ border-right: none }
+  .client:nth-child(4n){ border-right: none }
+  @media(max-width: 860px){ .client:nth-child(4n){ border-right: 1px solid var(--rule) } .client:nth-child(3n){ border-right: none } }
+  @media(max-width: 480px){ .client:nth-child(3n){ border-right: 1px solid var(--rule) } .client:nth-child(2n){ border-right: none } }
+
+  /* ---------- video testimonial ---------- */
+  .vt-section{
+    background: var(--paper-2);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: clamp(56px, 8vw, 120px) 0;
+  }
+  .vt-grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+  }
+  @media(min-width: 900px){
+    .vt-grid{ grid-template-columns: 0.95fr 1fr; }
+  }
+  .vt-side .eyebrow{ margin-bottom: 16px; }
+  .vt-quote{
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(28px, 4.2vw, 56px);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    text-transform: lowercase;
+    margin: 0;
+  }
+  .vt-quote em{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--accent);
+  }
+  .vt-body{
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--muted);
+    margin: 24px 0 0;
+    max-width: 42ch;
+  }
+  .vt-cred{
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .vt-cred strong{ font-weight: 600 }
+  .vt-cred span{ color: var(--muted); margin-left: 6px }
+  .vt-player{
+    position: relative;
+    aspect-ratio: 4/3;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #0E0E0E;
+    cursor: pointer;
+    box-shadow: 0 30px 60px rgba(14,14,14,0.18);
+  }
+  .vt-player img.vt-poster, .vt-player video{
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .vt-player .play-ring{
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .25s ease;
+  }
+  .vt-player .play-ring::before{
+    content: "";
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 16px 40px rgba(233,75,28,0.45);
+    transition: transform .25s ease;
+  }
+  .vt-player .play-ring::after{
+    content: "";
+    position: absolute;
+    width: 0; height: 0;
+    border-left: 22px solid white;
+    border-top: 14px solid transparent;
+    border-bottom: 14px solid transparent;
+    margin-left: 8px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+  }
+  .vt-player:hover .play-ring::before{ transform: scale(1.08) }
+  .vt-player.playing .play-ring{ opacity: 0; pointer-events: none }
+  .vt-meta{
+    margin-top: 14px;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
 
   /* ---------- testimonial ---------- */
   .testi{
@@ -880,9 +1016,10 @@
       <em>también</em> el tuyo.
     </h1>
 
-    <div class="hero-photo">
-      <span class="tag">on stage · barcelona</span>
-      <image-slot id="hero-photo" placeholder="Foto principal: Sergi en una conferencia o en pista. Arrástrala aquí." shape="rect" src="https://images.unsplash.com/photo-1591115765373-5207764f72e4?auto=format&fit=crop&w=1400&q=80"></image-slot>
+    <div class="hero-photo" id="hero-yt" role="button" tabindex="0" aria-label="Reproducir vídeo de Sergi Grimau">
+      <span class="tag">vídeo · sergi en directo</span>
+      <img class="yt-poster" src="https://i.ytimg.com/vi/9AU5aqvY4I8/maxresdefault.jpg" alt="Sergi Grimau — speaker motivacional" loading="lazy" onerror="this.src='https://i.ytimg.com/vi/9AU5aqvY4I8/hqdefault.jpg'" />
+      <div class="yt-play" aria-hidden="true"></div>
     </div>
 
     <div class="hero-meta">
@@ -986,7 +1123,7 @@
     </blockquote>
     <div class="testi-meta">
       <div class="av">
-        <image-slot id="av-1" placeholder="Avatar" shape="circle" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80"></image-slot>
+        <image-slot id="av-1" placeholder="Avatar" shape="circle" src="../assets/testimonio-2-thumb.jpg"></image-slot>
       </div>
       <div>
         <strong>Marta Puig</strong> <span>· directora de personas, Naturhouse</span>
@@ -1014,7 +1151,7 @@
 
       <article class="talk">
         <div class="photo">
-          <image-slot id="t1" placeholder="Foto charla 1" shape="rect" src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=900&q=80"></image-slot>
+          <image-slot id="t1" placeholder="Foto charla 1" shape="rect" src="../assets/sergi-escenario-micro.jpg"></image-slot>
         </div>
         <div class="talk-meta">
           <span class="kind">keynote</span>
@@ -1026,7 +1163,7 @@
 
       <article class="talk">
         <div class="photo">
-          <image-slot id="t2" placeholder="Foto charla 2" shape="rect" src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=900&q=80"></image-slot>
+          <image-slot id="t2" placeholder="Foto charla 2" shape="rect" src="../assets/sergi-publico-dejando-huella.jpg"></image-slot>
         </div>
         <div class="talk-meta">
           <span class="kind">keynote</span>
@@ -1038,7 +1175,7 @@
 
       <article class="talk">
         <div class="photo">
-          <image-slot id="t3" placeholder="Foto charla 3 — formato horizontal" shape="rect" src="https://images.unsplash.com/photo-1559223607-a43f990c692c?auto=format&fit=crop&w=900&q=80"></image-slot>
+          <image-slot id="t3" placeholder="Foto charla 3 — formato horizontal" shape="rect" src="../assets/sergi-espaldas-balon.jpg"></image-slot>
         </div>
         <div class="talk-meta">
           <span class="kind">conferencia + dinámica</span>
@@ -1050,7 +1187,7 @@
 
       <article class="talk">
         <div class="photo">
-          <image-slot id="t4" placeholder="Foto charla 4" shape="rect" src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=900&q=80"></image-slot>
+          <image-slot id="t4" placeholder="Foto charla 4" shape="rect" src="../assets/sergi-traje-balon-portatil.jpg"></image-slot>
         </div>
         <div class="talk-meta">
           <span class="kind">taller</span>
@@ -1061,6 +1198,28 @@
       </article>
 
     </div>
+  </div>
+</section>
+
+<!-- ============ VIDEO TESTIMONIAL ============ -->
+<section class="vt-section" aria-labelledby="vt-title">
+  <div class="shell vt-grid">
+
+    <div class="vt-side">
+      <div class="eyebrow">testimonio en vídeo</div>
+      <h2 id="vt-title" class="vt-quote">
+        “salimos hablando<br>
+        el <em>mismo idioma.</em>”
+      </h2>
+      <p class="vt-body">El equipo directivo aplicó el vocabulario de pista en sus reuniones de la semana siguiente. Tres meses después, las cifras del trimestre eran las mejores en cinco años.</p>
+      <div class="vt-cred"><strong>Cliente</strong> <span>· dirección general, [empresa]</span></div>
+    </div>
+
+    <div class="vt-player" id="vt-player-sergi" role="button" tabindex="0" aria-label="Reproducir testimonio en vídeo">
+      <img class="vt-poster" src="../assets/testimonio-1-thumb.jpg" alt="Testimonio en vídeo de cliente de Sergi Grimau" loading="lazy" />
+      <div class="play-ring" aria-hidden="true"></div>
+    </div>
+
   </div>
 </section>
 
@@ -1077,7 +1236,7 @@
 
     <div class="bio-grid">
       <div class="bio-photo">
-        <image-slot id="bio-photo" placeholder="Foto retrato de Sergi" shape="rect" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80"></image-slot>
+        <image-slot id="bio-photo" placeholder="Foto retrato de Sergi" shape="rect" src="../assets/sergi-retrato-profesional.png"></image-slot>
       </div>
       <div class="bio-copy">
         <p>“El deporte de élite te enseña una cosa que ningún MBA enseña: que el resultado es del grupo, siempre. Y que los grupos que ganan se construyen, no aparecen.”</p>
@@ -1113,10 +1272,6 @@
       <div class="client"><img src="../assets/w-barcelona.png" alt="W Barcelona" loading="lazy" /></div>
       <div class="client"><img src="../assets/mediform.png" alt="Mediform" loading="lazy" /></div>
       <div class="client"><img src="../assets/inclus.png" alt="Festival Inclús Barcelona" loading="lazy" /></div>
-      <div class="client">caixabank</div>
-      <div class="client">seat</div>
-      <div class="client">grifols</div>
-      <div class="client">damm</div>
       <div class="client">+ 50 más</div>
     </div>
   </div>
@@ -1134,7 +1289,7 @@
       <p style="font-size: 16px; line-height: 1.5; margin: 0 0 16px">Tres meses después de Game Day, el equipo comercial mantenía la metodología de reuniones de “tiempo muerto” cada viernes. Las cifras del trimestre fueron las mejores en cinco años.</p>
       <div class="testi-meta">
         <div class="av">
-          <image-slot id="av-2" placeholder="Avatar" shape="circle" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"></image-slot>
+          <image-slot id="av-2" placeholder="Avatar" shape="circle" src="../assets/testimonio-1-thumb.jpg"></image-slot>
         </div>
         <div>
           <strong>Jordi Roca</strong> <span>· dir. comercial, Damm</span>
@@ -1385,6 +1540,58 @@
       }
     });
   });
+
+  // Hero YouTube facade (carga el iframe solo al click)
+  const heroYT = document.getElementById('hero-yt');
+  function loadHeroYT(){
+    if(!heroYT || heroYT.classList.contains('playing')) return;
+    heroYT.classList.add('playing');
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://www.youtube-nocookie.com/embed/9AU5aqvY4I8?autoplay=1&rel=0&start=1';
+    iframe.title = 'Sergi Grimau — Speaker motivacional';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.loading = 'lazy';
+    heroYT.appendChild(iframe);
+  }
+  if(heroYT){
+    heroYT.addEventListener('click', loadHeroYT);
+    heroYT.addEventListener('keydown', e=>{
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); loadHeroYT(); }
+    });
+  }
+
+  // Video testimonial (HLS .m3u8 vía hls.js bajo demanda)
+  const vtPlayer = document.getElementById('vt-player-sergi');
+  const HLS_URL = 'https://gcp-repackager.wixmp.com/video.wixstatic.com/video/ab056a_e4238e2b3ada41c8a714dcde823cece9/,480p,720p,1080p,/mp4/file.mp4.urlset/master.m3u8';
+  function playVT(){
+    if(!vtPlayer || vtPlayer.classList.contains('playing')) return;
+    vtPlayer.classList.add('playing');
+    const v = document.createElement('video');
+    v.controls = true; v.autoplay = true; v.playsInline = true;
+    v.style.cssText = 'width:100%;height:100%;object-fit:cover;background:#000';
+    vtPlayer.appendChild(v);
+    if(v.canPlayType('application/vnd.apple.mpegurl')){
+      v.src = HLS_URL;
+    } else {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js';
+      s.onload = ()=>{
+        if(window.Hls && window.Hls.isSupported()){
+          const hls = new window.Hls();
+          hls.loadSource(HLS_URL);
+          hls.attachMedia(v);
+        } else { v.src = HLS_URL; }
+      };
+      document.head.appendChild(s);
+    }
+  }
+  if(vtPlayer){
+    vtPlayer.addEventListener('click', playVT);
+    vtPlayer.addEventListener('keydown', e=>{
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); playVT(); }
+    });
+  }
 })();
 </script>
 
