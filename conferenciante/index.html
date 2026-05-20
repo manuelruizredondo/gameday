@@ -587,7 +587,19 @@
     opacity: .55;
     transition: opacity .2s;
   }
+  .client:has(img){ opacity: 1; padding: 16px; }
+  .client img{
+    max-width: 78%;
+    max-height: 70%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: .65;
+    transition: opacity .25s ease, filter .25s ease, transform .25s ease;
+  }
   .client:hover{ opacity: 1 }
+  .client:hover img{ opacity: 1; filter: grayscale(0); transform: scale(1.04); }
   .client:nth-child(6n){ border-right: none }
 
   /* ---------- testimonial ---------- */
@@ -1094,18 +1106,18 @@
       <h2>han confiado <em>antes</em>.</h2>
     </div>
     <div class="clients-row">
-      <div class="client">naturhouse</div>
+      <div class="client"><img src="../assets/faes-farma.png" alt="Faes Farma" loading="lazy" /></div>
+      <div class="client"><img src="../assets/avene.png" alt="Eau Thermale Avène" loading="lazy" /></div>
+      <div class="client"><img src="../assets/henkel.png" alt="Henkel" loading="lazy" /></div>
+      <div class="client"><img src="../assets/pierre-fabre.png" alt="Pierre Fabre" loading="lazy" /></div>
+      <div class="client"><img src="../assets/w-barcelona.png" alt="W Barcelona" loading="lazy" /></div>
+      <div class="client"><img src="../assets/mediform.png" alt="Mediform" loading="lazy" /></div>
+      <div class="client"><img src="../assets/inclus.png" alt="Festival Inclús Barcelona" loading="lazy" /></div>
       <div class="client">caixabank</div>
       <div class="client">seat</div>
       <div class="client">grifols</div>
-      <div class="client">accenture</div>
-      <div class="client">mango</div>
       <div class="client">damm</div>
-      <div class="client">freixenet</div>
-      <div class="client">santander</div>
-      <div class="client">repsol</div>
-      <div class="client">b. sabadell</div>
-      <div class="client">+ 48 más</div>
+      <div class="client">+ 50 más</div>
     </div>
   </div>
 </section>

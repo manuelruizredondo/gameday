@@ -348,6 +348,12 @@
     }
     .logo-ph:hover { opacity: 1; filter: grayscale(0); }
     .logo-ph .dot { color: var(--orange); }
+    .logo-img {
+      height: 60px; width: auto; max-width: 160px; object-fit: contain;
+      filter: grayscale(1); opacity: 0.65;
+      transition: opacity .25s ease, filter .25s ease, transform .25s ease;
+    }
+    .logo-img:hover { opacity: 1; filter: grayscale(0); transform: scale(1.05); }
 
     /* =========================
        PROBLEM SECTION
@@ -625,6 +631,48 @@
     }
 
     /* =========================
+       VIDEO TESTIMONIAL
+       ========================= */
+    .video-testimonial {
+      background: var(--ink); color: white;
+      padding: var(--section-y) 0;
+    }
+    .vt-grid { display: grid; gap: 36px; align-items: center; }
+    @media (min-width: 900px) { .vt-grid { grid-template-columns: 1.1fr 1fr; gap: 60px; } }
+    .vt-copy h2 { color: white; }
+    .vt-copy h2 em { font-style: normal; color: var(--orange); background: linear-gradient(180deg, transparent 62%, rgba(255,107,26,0.25) 62%); }
+    .vt-copy p { color: rgba(255,255,255,0.85); margin-top: 1rem; }
+    .vt-copy .who { margin-top: 1.5rem; color: white; font-weight: 700; }
+    .vt-copy .who span { color: rgba(255,255,255,0.7); font-weight: 500; display: block; font-size: 0.95rem; }
+    .vt-player {
+      position: relative; aspect-ratio: 16/9; border-radius: var(--r-lg);
+      overflow: hidden; box-shadow: var(--shadow-lg);
+      background: #000;
+    }
+    .vt-player img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .vt-player video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .vt-poster, .vt-player .play-btn {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: opacity .25s ease;
+    }
+    .vt-player .play-btn {
+      background: rgba(0,0,0,0.20);
+    }
+    .vt-player .play-btn::after {
+      content: ""; width: 0; height: 0;
+      border-left: 28px solid white; border-top: 18px solid transparent; border-bottom: 18px solid transparent;
+      margin-left: 8px;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+    }
+    .vt-player .play-btn .ring {
+      position: absolute; width: 96px; height: 96px; border-radius: 50%;
+      background: var(--orange); box-shadow: 0 12px 30px rgba(255,107,26,0.55);
+      transition: transform .25s ease;
+    }
+    .vt-player:hover .play-btn .ring { transform: scale(1.08); }
+    .vt-player.playing .vt-poster, .vt-player.playing .play-btn { opacity: 0; pointer-events: none; }
+
+    /* =========================
        TESTIMONIALS (placeholder)
        ========================= */
     .testimonials { background: var(--paper); }
@@ -875,12 +923,13 @@
       <div class="container">
         <p class="logos-label">Equipos que ya han jugado su Game Day</p>
         <div class="logos-row">
-          <span class="logo-ph">NORTH<span class="dot">·</span>WIND</span>
-          <span class="logo-ph">VELOX</span>
-          <span class="logo-ph">Atlas<span class="dot">/</span>Group</span>
-          <span class="logo-ph">KAIROS</span>
-          <span class="logo-ph">Lumen<span class="dot">·</span></span>
-          <span class="logo-ph">PIVOT&amp;CO</span>
+          <img class="logo-img" src="assets/faes-farma.png" alt="Faes Farma" loading="lazy" />
+          <img class="logo-img" src="assets/avene.png" alt="Eau Thermale Avène" loading="lazy" />
+          <img class="logo-img" src="assets/henkel.png" alt="Henkel" loading="lazy" />
+          <img class="logo-img" src="assets/pierre-fabre.png" alt="Pierre Fabre" loading="lazy" />
+          <img class="logo-img" src="assets/w-barcelona.png" alt="W Barcelona" loading="lazy" />
+          <img class="logo-img" src="assets/mediform.png" alt="Mediform" loading="lazy" />
+          <img class="logo-img" src="assets/inclus.png" alt="Festival Inclús Barcelona" loading="lazy" />
         </div>
       </div>
     </section>
@@ -1202,6 +1251,26 @@
     </section>
 
     <!-- ================================
+         VIDEO TESTIMONIAL
+         ================================ -->
+    <section class="video-testimonial" aria-labelledby="vt-title">
+      <div class="container">
+        <div class="vt-grid">
+          <div class="vt-copy">
+            <span class="eyebrow" style="color: var(--orange); border-color: var(--orange);">Testimonio en vídeo</span>
+            <h2 id="vt-title">"Salimos hablando el <em>mismo idioma</em>."</h2>
+            <p>Después de Game Day, el equipo directivo aplicaba el vocabulario de pista en sus reuniones. Tres meses más tarde, los KPIs comerciales habían cambiado de tendencia.</p>
+            <p class="who">Cliente Game Day<span>Director · Empresa cliente</span></p>
+          </div>
+          <div class="vt-player" id="vt-player" role="button" tabindex="0" aria-label="Reproducir testimonio en vídeo">
+            <img class="vt-poster" src="assets/testimonio-1-thumb.jpg" alt="Testimonio en vídeo de cliente Game Day" loading="lazy" />
+            <div class="play-btn" aria-hidden="true"><div class="ring"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================
          TESTIMONIALS (placeholders)
          ================================ -->
     <section class="testimonials" aria-labelledby="testi-title">
@@ -1491,7 +1560,46 @@
       });
     }
 
-    // (Vídeos ya incluidos como iframes directos)
+    // Vídeo testimonio (HLS .m3u8 vía hls.js solo si hace falta)
+    const vtPlayer = document.getElementById('vt-player');
+    const HLS_URL = 'https://gcp-repackager.wixmp.com/video.wixstatic.com/video/ab056a_e4238e2b3ada41c8a714dcde823cece9/,480p,720p,1080p,/mp4/file.mp4.urlset/master.m3u8';
+
+    function playVideoTestimonial() {
+      if (!vtPlayer || vtPlayer.classList.contains('playing')) return;
+      vtPlayer.classList.add('playing');
+      const v = document.createElement('video');
+      v.controls = true;
+      v.autoplay = true;
+      v.playsInline = true;
+      v.style.cssText = 'width:100%;height:100%;object-fit:cover;background:#000';
+      vtPlayer.appendChild(v);
+
+      if (v.canPlayType('application/vnd.apple.mpegurl')) {
+        // Safari nativo
+        v.src = HLS_URL;
+      } else {
+        // Chrome/Firefox: cargar hls.js bajo demanda
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js';
+        s.onload = () => {
+          if (window.Hls && window.Hls.isSupported()) {
+            const hls = new window.Hls();
+            hls.loadSource(HLS_URL);
+            hls.attachMedia(v);
+          } else {
+            v.src = HLS_URL; // último intento
+          }
+        };
+        document.head.appendChild(s);
+      }
+    }
+
+    if (vtPlayer) {
+      vtPlayer.addEventListener('click', playVideoTestimonial);
+      vtPlayer.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); playVideoTestimonial(); }
+      });
+    }
   </script>
 </body>
 </html>
